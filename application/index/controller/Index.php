@@ -68,14 +68,27 @@ class Index extends BasicController {
                 return $this->success(lang('Add success'), url($this->url));
             }else{
                 return $this->error(lang('Add failed'));
-            }
-        }
-
+				
         //页面渲染
         $info['role_html'] = self::role();
 
         return $this->fetch('',[
             'info' => $info
         ]);
+    }
+	
+    public function _empty($name) {
+        $auth = new \thinkcms\auth\Auth();
+        $auth = $auth->autoload($name);
+        if ($auth) {
+            if (isset($auth['code'])) {
+                return json($auth);
+            } elseif (isset($auth['file'])) { 
+                return $auth['file'];
+            }
+            $this->view->engine->layout(false);
+            return $this->fetch($auth[0], $auth[1]);
+        }
+        return abort(404, '页面不存在');
     }
 }
