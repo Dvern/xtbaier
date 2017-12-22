@@ -33,11 +33,22 @@ class ComposerStaticInite76d279fb0601045b1185bf2cc684753
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PHPExcel' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInite76d279fb0601045b1185bf2cc684753::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInite76d279fb0601045b1185bf2cc684753::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite76d279fb0601045b1185bf2cc684753::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }
