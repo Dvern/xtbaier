@@ -24,5 +24,9 @@ class Index extends BasicController {
 	public function menu() {
 		$this->fetch();
 	}
+	
+	public function home() {
+		$this->fetch();
+	}
 
 }
