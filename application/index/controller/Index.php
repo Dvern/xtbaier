@@ -38,39 +38,18 @@ class Index extends BasicController {
         ]);
     }
 
-    //增加
-    public function add()
-    {
-        //add_post 数据处理
-        if($this->request->isPost()){
-            $post = $this->request->post();
-
-            //数据验证
-            $result = $this->validate($post,$this->validate);
-            if (true !== $result) {
-                return $this->error($result);
+    public function _empty($name) {
+        $auth = new \thinkcms\auth\Auth();
+        $auth = $auth->autoload($name);
+        if ($auth) {
+            if (isset($auth['code'])) {
+                return json($auth);
+            } elseif (isset($auth['file'])) { 
+                return $auth['file'];
             }
-
-            //写入数据库
-            $post['admin_password'] = Tool::get('helper')->getMd5($post['admin_password']);
-            $add = AdminModel::create($post);
-            if($add){
-
-                //加入角色
-                $authRoleUser = new AuthRoleUser();
-                $authRoleUser->authRoleUserAdd($post['role'], $add['admin_id']);
-
-                return $this->success(lang('Add success'), url($this->url));
-            }else{
-                return $this->error(lang('Add failed'));
-            }
+            $this->view->engine->layout(false);
+            return $this->fetch($auth[0], $auth[1]);
         }
-
-        //页面渲染
-        $info['role_html'] = self::role();
-
-        return $this->fetch('',[
-            'info' => $info
-        ]);
+        return abort(404, '页面不存在');
     }
 }
