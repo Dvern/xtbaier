@@ -52,4 +52,9 @@ class Index extends BasicController {
         }
         return abort(404, '页面不存在');
     }
+	
+	public function GetAllUserInfo() {
+        $userinfo = new Userinfo();
+        echo $userinfo->GetAllUserInfo();
+    }
 }
