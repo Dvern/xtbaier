@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="__STATIC__/info/jedate/jedate.js"></script>
+        <link rel="stylesheet" type="text/css" href="__STATIC__/info/jedate/skin/jedate.css">
+        <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="__STATIC__/info/css/bootstrap-table.css">
+        <link href="__STATIC__/info/css/user_style.css" rel="stylesheet"/>
+        <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="__STATIC__/info/js/bootstrap-table.js"></script>
+        <script src="__STATIC__/info/js/bootstrap-table-zh-CN.js"></script>
+        <script src="__STATIC__/info/src/extensions/export/bootstrap-table-export.js"></script>
+    </head>
+    <body>    
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">查询条件 <span class="lab_hiht right" id="search_vice"></span></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-10 col-xs-12 form-inline">
+                                <div class="row">
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">姓名/号码</label>
+                                        <input type="text" class="form-control" id="in_name_tel" placeholder="姓名/手机号码">                                       
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">开始日期</label>
+                                        <input type="text" class="form-control" id="in_start">
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">结束日期</label>
+                                        <input type="text" class="form-control" id="in_end">
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">&nbsp;来源类别</label>
+                                        <select class="form-control s_genre" id="search_genre"></select>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">                                    
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">来源渠道</label>
+                                        <select class="form-control source_data" id="search_channel"></select>
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">到院情况</label>
+                                        <select class="form-control" id="search_arrive">
+                                            <option value="">请选择到院情况</option>
+                                            <option value="已到院">已到院</option>
+                                            <option value="未到院">未到院</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 col-xs-6 form-group">
+                                        <label class="control-label">&nbsp;客户意向</label>
+                                        <select class="form-control" id="s_intent">
+                                            <option value="-1">请选择客户意向</option>
+                                            <option value="1">有意向</option>
+                                            <option value="0">无意向</option>
+                                        </select>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="col-md-2 col-xs-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-3 form-group">
+                                        <button type="button" class="btn btn-info" id="btn_query">查询</button>
+                                    </div>
+                                    <div class="col-md-6 col-xs-3 form-group">
+                                        <button type="button" class="btn btn-danger" id="btn_clean">清除</button>
+                                    </div>                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="toolbar">      
+                        <div class="btn btn-default" data-toggle="modal" data-target="#modal_user_add"><span class="glyphicon glyphicon-plus"></span> 新增</div>
+                        <button type="button" class="btn btn-default" id="btn_del_userinfo"><span class="glyphicon glyphicon-remove"></span> 删除</button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal_send"><span class="glyphicon glyphicon-envelope"></span> 发送</button>
+                    </div>
+                    <table id="table"></table>    
+                </div>                     
+            </div>
+        </div>
+        <!-- 模态框（Modal）修改客户信息 -->
+        <div class="modal fade" id="modal_modify_uinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">修改客户信息</h4>
+                    </div>
+                    <div class="modal-body">
+                         <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">基本信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">姓名*</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="in_name" placeholder="请输入姓名">
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht left" id="lab_name"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">性别*</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control" id="s_sex">
+                                                <option value="男">男</option>
+                                                <option value="女">女</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">年龄</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="in_age" placeholder="请输入年龄">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">手机*</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="in_tel" placeholder="请输入手机号码">
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht" id="lab_tel"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">来源类别*</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control s_genre" id="s_genre">
+<!--                                                <option value="院内">院内</option>
+                                                <option value="院外">院外</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">来源渠道*</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control source_data" id="s_channel"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">到院情况</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control" id="s_arrive">
+                                                <option value="">请选择到院情况</option>
+                                                <option value="已到院">已到院</option>
+                                                <option value="未到院">未到院</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">其他备注</label>
+                                        <div class="col-md-5">
+                                            <textarea class="form-control" rows="2" id="in_remark" placeholder="不超过50个字"></textarea>
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht" id="lab_remark"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6 control-label lab_hiht" id="lab_modify_vice">提示</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+                        <button type="button" class="btn btn-primary" id="btn_uinfo_save">修改</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- 模态框（Modal）新增客户信息 -->
+        <div class="modal fade" id="modal_user_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabe3" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabe3">新增客户信息</h4>
+                    </div>
+                    <div class="modal-body">
+                         <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">基本信息<span class="add_vice"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">姓名*</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control in_name" placeholder="请输入姓名">
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht left lab_name"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">性别*</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control s_sex">
+                                                <option value="男">男</option>
+                                                <option value="女">女</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">年龄</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control in_age" placeholder="请输入年龄">
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht lab_age"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">手机*</label>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control in_tel" placeholder="请输入手机号码">
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht lab_tel"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">来源类别*</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control s_genre" id="add_chanel">
+<!--                                                <option value="院内">院内</option>
+                                                <option value="院外">院外</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">来源渠道*</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control source_data s_channel" id="add_source"></select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">到院情况</label>
+                                        <div class="col-md-5">
+                                            <select class="form-control s_arrive">
+                                                <option value="">请选择到院情况</option>
+                                                <option value="已到院">已到院</option>
+                                                <option value="未到院">未到院</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <label class="col-md-4 control-label">回访人员</label>
+                                            <div class="col-md-5">
+                                                <input type="text" class="form-control in_visitname" placeholder="回访员姓名" value="">
+                                            </div>
+                                            <label class="col-md-3 control-label lab_hiht lab_visitname"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">回访情况</label>
+                                            <div class="col-md-5">
+                                                <textarea class="form-control in_visit" rows="3" placeholder="不超过100个字"></textarea>
+                                            </div>
+                                            <label class="col-md-3 control-label lab_hiht lab_visit"></label>
+                                        </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">其他备注</label>
+                                        <div class="col-md-5">
+                                            <textarea class="form-control in_remark" rows="2" placeholder="不超过50个字"></textarea>
+                                        </div>
+                                        <label class="col-md-3 control-label lab_hiht lab_remark"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+                        <button type="button" class="btn btn-primary" id="btn_uinfo_add">录入</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- 模态框（Modal）查看用户信息 -->
+        <div class="modal fade" id="modal_see" tabindex="-1" role="dialog" aria-labelledby="myModalLabe2" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabe2">客户回访情况</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">基本信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-6">
+                                    <p class="text-left" id="p_name"></p>
+                                    <p class="text-left" id="p_age"></p>
+                                    <p class="text-left" id="p_channel"></p>
+                                    <p>是否意向客户：<input id="intent" type="checkbox" style="vertical-align: text-bottom; margin-bottom: 1px;"/></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="text-left" id="p_sex"></p>
+                                    <p class="text-left" id="p_tel"></p>
+                                    <p class="text-left" id="p_arrive"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-hover table-striped" id="table_visit">
+                            <caption>回访记录</caption>
+                            <thead>
+                                <tr>
+                                    <th>回访编号</th>
+                                    <th>回访人员</th>
+                                    <th>回访内容</th>
+                                    <th>回访时间</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">回访记录管理</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">回访员</label>
+                                        <div class="col-md-7">
+                                            <input type="text" class="form-control" id="m_visitname" placeholder="回访员姓名" value="">
+                                        </div>
+                                        <label class="col-md-2 a_top lab_hiht" id="lab_visitname"></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">客户回访情况</label>
+                                        <div class="col-md-7">
+                                            <textarea class="form-control" rows="3" id="m_visit" placeholder="不超过100个字"></textarea>
+                                        </div>
+                                        <label class="col-md-2 a_top lab_hiht" id="lab_visit"></label>
+                                    </div>
+                                    <p class="text-center lab_hiht" id="lab_visit_vice">提示</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="btn_add_close">关闭</button>
+                        <button type="button" class="btn btn-danger" id="btn_delvisit">删除</button>
+                        <button type="button" class="btn btn-info" id="btn_updatevisit">修改</button>
+                        <button type="button" class="btn btn-primary" id="btn_savevisit">新增</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 模态框（Modal）发送短信通知 -->
+        <div class="modal fade" id="modal_send" tabindex="-1" role="dialog" aria-labelledby="myModalLabe4" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabe4">LeanCloud-短信通知</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">短信模板<span class="right select_num"></span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="well">
+                                    <p class="text-info">参数设置<span class="save_lean_vice"></span></p>
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label lab_id">App ID</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control in_id" placeholder="App ID">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-default" id="btn_idkey_save"><span class="glyphicon glyphicon-ok"></span> 保存</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label lab_key">App Key</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control in_key" placeholder="App Key">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="well">
+                                    <p class="text-info">短信模板<span class="tpl_vice"></span></p>
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label lab_tpl_select">模板选择</label>
+                                            <div class="col-md-6">
+                                                <select class="form-control s_msgtpl"></select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-default" id="btn_modifytpl"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label lab_tpl_name">模板名称</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control tpl_name" placeholder="template 不超过20个字符">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-default" id="btn_addtpl"><span class="glyphicon glyphicon-plus"></span> 新增</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label lab_tpl_sign">签名名称</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control tpl_sign" placeholder="sign 不超过20个字符">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-default" id="btn_deltpl"><span class="glyphicon glyphicon-remove"></span> 删除</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p id="send_vice"></p>
+                            </div>
+                        </div>                
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-success" id="btn_send"><span class="glyphicon glyphicon-ok"></span> 发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="__STATIC__/info/js/lookuser.js"></script>
+<!--        <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>-->
+        <script src="__STATIC__/info/src/tableExport.js"></script>
+    </body>
+</html>
