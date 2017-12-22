@@ -19,9 +19,10 @@ class Index extends BasicController {
         ]);
         return $this->fetch();
     }
-
-    public function home() {
-        return $this->fetch();
-    }
+	
+	//更新菜单
+	public function menu() {
+		$this->fetch();
+	}
 
 }
